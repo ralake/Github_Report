@@ -12,7 +12,7 @@
     <div class='profile-container'>
     </div>
 
-    <template>
+    <template class="profile-template">
       <div class="profile">
         <div class="left">
           <img src="{{ avatar_url }}">
@@ -21,11 +21,11 @@
         <div class="right">
           <h3>
             <a href="{{ html_url }}">
-              tansaku
+              {{ login }}
             </a>
           </h3>
           <h4>Repos: {{ public_repos }}</h4>
-          <h4>Followers: {{ public_followers }}</h4>
+          <h4>Followers: {{ followers }}</h4>
         </div>
         <br clear="all">
       </div>
@@ -34,12 +34,26 @@
     <script src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
     <script>
-   $(document).ready(function(){
-     $.get('https://api.github.com/users/tansaku',function(user){
-       var newProfile = Mustache.render($('profile-template').html(), user);
-       $('.profile-container').append(newProfile);
-     })
-   });
+
+      var auth_tokens = 'client_id=b9650ff2d175bf4b8c20&client_secret=4f1e800ffe962f2e96b19eb3f4787a9308596dbb'
+
+      function getUserProfile(login){
+        $.get('https://api.github.com/users/' + login + '?' + auth_tokens ,function(user){
+          var newProfile = Mustache.render($('.profile-template').html(), user);
+        $('.profile-container').append(newProfile);
+        })  
+      };
+
+    $(document).ready(function(){
+
+      $('#add_profile').on('submit', function(event){
+        event.preventDefault();
+        getUserProfile($('#username').val());
+      });
+
+
+    });
+
     </script>
   </body>
 </html>
